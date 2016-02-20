@@ -4,7 +4,6 @@ class Product < Udacidata
   attr_reader :id, :price, :brand, :name
 
   def initialize(opts={})
-
     # Get last ID from the database if ID exists
     get_last_id
     # Set the ID if it was passed in, otherwise use last existing ID
