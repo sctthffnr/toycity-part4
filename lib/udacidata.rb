@@ -18,4 +18,8 @@ class Udacidata
   def self.all
     @@items
   end
+
+  def self.first
+    @@items.first
+  end
 end
