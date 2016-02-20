@@ -6,12 +6,12 @@ class Udacidata
   @@items = []
 
   def self.create(options = {})
-    @data_path = File.dirname(__FILE__) + '/../data/data.csv'
-    CSV.open(@data_path, 'a') do |csv|
-      csv << [options[:brand], options[:product], options[:price]]
-    end
     item = new(options)
     @@items << item
+    @data_path = File.dirname(__FILE__) + '/../data/data.csv'
+    CSV.open(@data_path, 'a') do |csv|
+      csv << [item.id.to_s, item.brand, item.name, item.price]
+    end
     item
   end
 
