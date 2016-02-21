@@ -19,7 +19,8 @@ class Udacidata
     @@items
   end
 
-  def self.first
-    @@items.first
+  def self.first(num = 1)
+    return @@items.first if num == 1
+    @@items.take(num)
   end
 end
