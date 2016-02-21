@@ -19,8 +19,11 @@ class Udacidata
     @@items
   end
 
-  def self.first(num = 1)
-    return @@items.first if num == 1
-    @@items.take(num)
+  def self.first(num = nil)
+    num ? @@items.take(num) : @@items.first
+  end
+
+  def self.last(num = nil)
+    num ? @@items.slice(-num, num) : @@items.last
   end
 end
