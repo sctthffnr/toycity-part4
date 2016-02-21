@@ -26,4 +26,10 @@ class Udacidata
   def self.last(num = nil)
     num ? @@items.slice(-num, num) : @@items.last
   end
+
+  def self.find(id)
+    @@items.each do |item|
+      return item if item.id == id
+    end
+  end
 end
