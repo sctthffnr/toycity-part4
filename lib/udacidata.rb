@@ -4,15 +4,19 @@ require 'csv'
 
 class Udacidata
   @@items = []
+  @@data_path = File.dirname(__FILE__) + '/../data/data.csv'
 
   def self.create(options = {})
     item = new(options)
     @@items << item
-    @data_path = File.dirname(__FILE__) + '/../data/data.csv'
-    CSV.open(@data_path, 'a') do |csv|
+    CSV.open(@@data_path, 'a') do |csv|
       csv << [item.id.to_s, item.brand, item.name, item.price]
     end
     item
+  end
+
+  def self.empty!
+    @@items = []
   end
 
   def self.all
@@ -30,6 +34,23 @@ class Udacidata
   def self.find(id)
     @@items.each do |item|
       return item if item.id == id
+    end
+  end
+
+  def self.destroy(id)
+    rewrite_csv(id)
+    @@items.delete(find(id))
+  end
+
+  def self.rewrite_csv(id)
+    current = CSV.read(@@data_path)
+    current.each do |row|
+      current.delete(row) if row.first == id.to_s
+    end
+    CSV.open(@@data_path, 'wb') do |csv|
+      current.each do |row|
+        csv << row
+      end
     end
   end
 end

@@ -4,7 +4,7 @@ require_relative '../lib/product'
 # fake data for testing purposes
 
 def db_seed
-  @data_path = File.dirname(__FILE__) + '/../data/data.csv'
+  Product.empty!
   10.times do
     Product.create(brand: Faker::Company.name,
                    name: Faker::Commerce.product_name,
