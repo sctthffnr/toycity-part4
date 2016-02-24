@@ -3,6 +3,7 @@ require_relative 'errors'
 require 'csv'
 
 class Udacidata
+  Module.create_finder_methods(:name, :brand)
   @@items = []
   @@data_path = File.dirname(__FILE__) + '/../data/data.csv'
 
@@ -15,7 +16,7 @@ class Udacidata
     item
   end
 
-  def self.empty!
+  def self.delete_all
     @@items = []
   end
 
