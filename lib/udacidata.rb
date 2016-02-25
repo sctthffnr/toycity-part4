@@ -45,7 +45,7 @@ class Udacidata
 
   def self.where(query)
     @@items.each_with_object([]) do |item, result|
-      result << item if item.send(query.keys.first.to_s) == query.values
+      result << item if item.send(query.keys.first.to_s) == query.values.first
     end
   end
 
