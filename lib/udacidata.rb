@@ -43,6 +43,19 @@ class Udacidata
     @@items.delete(find(id))
   end
 
+  def self.where(query)
+    @@items.each_with_object([]) do |item, result|
+      result << item if item.send(query.keys.first.to_s) == query.values
+    end
+  end
+
+  def update(options = {})
+    options.each do |key, value|
+      send("#{key}=", value)
+    end
+    self
+  end
+
   def self.rewrite_csv(id)
     current = CSV.read(@@data_path)
     current.each do |row|
