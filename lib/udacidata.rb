@@ -36,9 +36,11 @@ class Udacidata
     @@items.each do |item|
       return item if item.id == id
     end
+    raise ProductNotFoundError, "#{id} is not a valid product id"
   end
 
   def self.destroy(id)
+    fail ProductNotFoundError, "#{id} is not a valid product id" unless find(id)
     rewrite_csv(id)
     @@items.delete(find(id))
   end
