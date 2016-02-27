@@ -32,7 +32,7 @@ print Product.all
 # puts "TEST ERROR HANDLING FOR DELETE - COMMENT OUT BEFORE SUBMITTING"
 # puts "--------------------------------------------------------------"
 # print Product.destroy(1000000000000)
-#
+
 # puts "------------------------------------------------------------"
 # puts "TEST ERROR HANDLING FOR FIND - COMMENT OUT BEFORE SUBMITTING"
 # puts "------------------------------------------------------------"
@@ -131,3 +131,5 @@ puts "PRINT SUMMARY REPORT"
 puts "--------------------"
 print Analyzable::print_report(Product.all)
 puts
+
+db_destroy
