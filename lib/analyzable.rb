@@ -38,7 +38,7 @@ module Analyzable
 
   def print_name_count(products)
     names = count_by_name(products)
-    puts 'Inventory by Name';
+    puts 'Inventory by Name'
     format_count(names)
   end
 

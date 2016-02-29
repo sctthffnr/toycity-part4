@@ -10,10 +10,7 @@ class Udacidata
   def self.create(options = {})
     item = new(options)
     @@items << item
-    CSV.open(@@data_path, 'a') do |csv|
-      csv << [item.id.to_s, item.brand, item.name, item.price]
-    end
-    item
+    add_to_db(item)
   end
 
   def self.delete_all
@@ -40,8 +37,8 @@ class Udacidata
   end
 
   def self.destroy(id)
-    fail ProductNotFoundError, "#{id} is not a valid product id" unless find(id)
-    rewrite_csv(id)
+    raise ProductNotFoundError, "#{id} is not a valid product id" unless find(id)
+    update_db(remove_from_db(id))
     @@items.delete(find(id))
   end
 
@@ -58,13 +55,24 @@ class Udacidata
     self
   end
 
-  def self.rewrite_csv(id)
+  def self.add_to_db(item)
+    CSV.open(@@data_path, 'a') do |csv|
+      csv << [item.id.to_s, item.brand, item.name, item.price]
+    end
+    item
+  end
+
+  def self.remove_from_db(id)
     current = CSV.read(@@data_path)
     current.each do |row|
       current.delete(row) if row.first == id.to_s
     end
+    current
+  end
+
+  def self.update_db(new_db)
     CSV.open(@@data_path, 'wb') do |csv|
-      current.each do |row|
+      new_db.each do |row|
         csv << row
       end
     end
