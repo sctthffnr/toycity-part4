@@ -4,33 +4,31 @@ require 'csv'
 
 class Udacidata
   Module.create_finder_methods(:name, :brand)
-  @@items = []
   @@data_path = File.dirname(__FILE__) + '/../data/data.csv'
 
   def self.create(options = {})
     item = new(options)
-    @@items << item
     add_to_db(item)
   end
 
-  def self.delete_all
-    @@items = []
-  end
-
   def self.all
-    @@items
+    db = CSV.read(@@data_path).drop(1)
+    db.each_with_object([]) do |row, items|
+      items << Product.new(id: row[0], brand: row[1],
+                           name: row[2], price: row[3].to_f)
+    end
   end
 
   def self.first(num = nil)
-    num ? @@items.take(num) : @@items.first
+    num ? all.take(num) : all.first
   end
 
   def self.last(num = nil)
-    num ? @@items.slice(-num, num) : @@items.last
+    num ? all.slice(-num, num) : all.last
   end
 
   def self.find(id)
-    @@items.each do |item|
+    all.each do |item|
       return item if item.id == id
     end
     raise ProductNotFoundError, "#{id} is not a valid product id"
@@ -38,12 +36,13 @@ class Udacidata
 
   def self.destroy(id)
     raise ProductNotFoundError, "#{id} is not a valid product id" unless find(id)
+    item = find(id)
     update_db(remove_from_db(id))
-    @@items.delete(find(id))
+    item
   end
 
   def self.where(query)
-    @@items.each_with_object([]) do |item, result|
+    all.each_with_object([]) do |item, result|
       result << item if item.send(query.keys.first.to_s) == query.values.first
     end
   end
@@ -52,7 +51,8 @@ class Udacidata
     options.each do |key, value|
       send("#{key}=", value)
     end
-    self
+    Udacidata.update_db(Udacidata.remove_from_db(id))
+    Udacidata.add_to_db(self)
   end
 
   def self.add_to_db(item)

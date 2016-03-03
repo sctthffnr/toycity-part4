@@ -3,9 +3,10 @@ require_relative '../lib/product'
 require_relative '../data/seeds'
 
 class TestUdacidata < MiniTest::Test
+
   def setup
-    @data_path = File.dirname(__FILE__) + '/../data/data.csv'
-    CSV.open(@data_path, 'wb') do |csv|
+    @data_path = File.dirname(__FILE__) + "/../data/data.csv"
+    CSV.open(@data_path, "wb") do |csv|
       csv << ["id", "brand", "product", "price"]
     end
     db_seed
@@ -14,15 +15,15 @@ class TestUdacidata < MiniTest::Test
   def test_create_method_adds_to_database
     before = CSV.read(@data_path).length
     5.times do
-      Product.create(brand: 'WalterToys', name: 'Sticky Notes', price: 34.00)
+      Product.create(brand: "WalterToys", name: "Sticky Notes", price: 34.00)
     end
     after = CSV.read(@data_path).length
     assert(after == before + 5)
   end
 
   def test_create_method_returns_product_object
-    product = Product.create(brand: 'ColtToys', name: 'Orchid Plant', price: 2.00)
-    assert_instance_of(Product, product)
+     product = Product.create(brand: "ColtToys", name: "Orchid Plant", price: 2.00)
+     assert_instance_of(Product, product)
   end
 
   def test_all_method_returns_array_data_type
@@ -35,6 +36,12 @@ class TestUdacidata < MiniTest::Test
     array_of_products.each do |product|
       assert_instance_of(Product, product)
     end
+  end
+
+  def test_all_method_returns_all_products_in_database
+    expected = CSV.read(@data_path).drop(1).length
+    actual = Product.all.length
+    assert_equal(expected, actual)
   end
 
   def test_first_method_returns_product_object
@@ -79,13 +86,11 @@ class TestUdacidata < MiniTest::Test
 
   def test_last_n_returns_array_type
     array_of_products = Product.last(3)
-    data = CSV.read(@data_path)
     assert_kind_of(Array, array_of_products)
   end
 
   def test_last_n_returns_correct_number_of_products
     array_of_products = Product.last(3)
-    data = CSV.read(@data_path)
     assert_equal(3, array_of_products.size)
   end
 
@@ -144,9 +149,19 @@ class TestUdacidata < MiniTest::Test
     assert_equal(expected, actual)
   end
 
+  def test_update_changes_product_info_in_database
+    database_before = CSV.read(@data_path)
+    product = Product.find(3).update(price: 5000.00, brand: "Hello World")
+    database_after = CSV.read(@data_path)
+    diff = (database_after - database_before).first
+    assert_equal(diff.include?("Hello World"), true)
+    assert_equal(database_before.size, database_after.size)
+  end
+
   # The "teardown" method always runs after the tests are done
   # "teardown" will delete the test database when tests are done
   def teardown
     File.delete(@data_path)
   end
+
 end

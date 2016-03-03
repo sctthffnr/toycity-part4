@@ -4,7 +4,6 @@ require_relative '../lib/product'
 # fake data for testing purposes
 
 def db_seed
-  Product.delete_all
   10.times do
     Product.create(brand: Faker::Company.name,
                    name: Faker::Commerce.product_name,
